@@ -113,7 +113,4 @@ Aunque no es común, se pueden seleccionar elementos con `name` usando el select
 
 ---
 
-## Conclusión
-Las distintas formas de aplicar y seleccionar estilos en CSS permiten una gran flexibilidad y organización en el diseño de sitios web. Se recomienda el uso de archivos CSS externos y clases para mantener el código limpio y fácil de mantener.
-
 
