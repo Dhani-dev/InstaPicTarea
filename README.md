@@ -2,115 +2,185 @@
 
 # Guía sobre Estilos en CSS
 
-CSS (Cascading Style Sheets) es un lenguaje de estilos utilizado para definir la presentación de documentos HTML. En esta guía, exploraremos las diferentes formas de aplicar estilos en CSS y cómo seleccionar elementos para personalizarlos.
+# Explicación de los estilos CSS
 
-## 1. Formas de Aplicar Estilos en CSS
-
-### a) Uso del Atributo `style` en las Etiquetas HTML
-Se pueden aplicar estilos directamente en los elementos HTML utilizando el atributo `style`. Sin embargo, esta práctica no es recomendada para proyectos grandes debido a la dificultad de mantenimiento.
-
-```html
-<p style="color: blue; font-size: 16px;">Este es un párrafo con estilos en línea.</p>
-```
-
-### b) Uso de la Etiqueta `<style>` en el Documento HTML
-Otra forma de aplicar estilos es incluirlos dentro de una etiqueta `<style>` en la sección `<head>` del documento HTML.
-
-```html
-<head>
-    <style>
-        p {
-            color: green;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <p>Este es un párrafo con estilos definidos en la sección `<style>`.</p>
-</body>
-```
-
-### c) Uso de un Archivo CSS Externo
-La forma más recomendada para proyectos grandes es definir los estilos en un archivo CSS separado y vincularlo al documento HTML con la etiqueta `<link>`.
-
-**Archivo `styles.css`**:
+## 1. `body` (Estilos generales)
 ```css
-p {
-    color: red;
-    font-size: 20px;
+body {
+    font-family: 'Ubuntu', 'Courier New', Courier, monospace;
+    color: #023047;
+    background-color: #f1f1f1;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 ```
-
-**Archivo `index.html`**:
-```html
-<head>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <p>Este es un párrafo con estilos definidos en un archivo externo.</p>
-</body>
-```
+- Define la fuente del texto con una prioridad (primero *Ubuntu*, si no está disponible, *Courier New*, y así sucesivamente).
+- Color del texto: `#023047` (un tono azul oscuro).
+- Fondo de la página: `#f1f1f1` (gris claro).
+- Elimina los márgenes y el padding por defecto.
+- Usa `display: flex` para organizar los elementos en columna.
+- `min-height: 100vh;` asegura que el `body` tenga al menos la altura completa de la pantalla.
 
 ---
 
-## 2. Formas de Seleccionar Elementos en CSS
-
-### a) Selección Directa por Etiqueta
-Se aplican estilos a todas las etiquetas de un tipo específico.
+## 2. `header` (Encabezado)
 ```css
-h1 {
-    color: blue;
+header {
+    background-color: #219ebc;
+    color: white;
+    padding: 20px;
     text-align: center;
 }
 ```
-
-### b) Selección por ID
-Se usa `#` seguido del ID del elemento. Debe ser único por página.
-```css
-#titulo-principal {
-    font-size: 24px;
-    color: purple;
-}
-```
-```html
-<h1 id="titulo-principal">Este es un título con un ID.</h1>
-```
-
-### c) Selección por Clase
-Se usa `.` seguido del nombre de la clase. Puede aplicarse a múltiples elementos.
-```css
-.destacado {
-    font-weight: bold;
-    background-color: yellow;
-}
-```
-```html
-<p class="destacado">Este es un párrafo destacado.</p>
-```
-
-### d) Selección por Atributo
-Se pueden aplicar estilos a elementos que contengan un atributo específico.
-```css
-input[type="text"] {
-    border: 2px solid gray;
-    padding: 5px;
-}
-```
-```html
-<input type="text" placeholder="Ingrese su nombre">
-```
-
-### e) Selección por Nombre
-Aunque no es común, se pueden seleccionar elementos con `name` usando el selector de atributos.
-```css
-[name="usuario"] {
-    background-color: lightblue;
-}
-```
-```html
-<input type="text" name="usuario" placeholder="Usuario">
-```
+- Fondo azul (`#219ebc`).
+- Texto en color blanco.
+- Espaciado interno de `20px`.
+- Alineación centrada del contenido.
 
 ---
+
+## 3. `main` (Sección principal)
+```css
+main {
+    flex: 1;
+    padding: 10px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+```
+- `flex: 1;` permite que ocupe el espacio disponible entre el `header` y el `footer`.
+- `padding: 10px 20px;` agrega margen interno.
+- `width: 100%;` asegura que ocupe todo el ancho disponible.
+- Usa `display: flex` para organizar los elementos en columna y centrarlos.
+
+---
+
+## 4. `#login-box` (Caja del formulario de login)
+```css
+#login-box {
+    background-color: #FFF;
+    padding: 20px 40px;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+```
+- Fondo blanco.
+- Espaciado interno `20px 40px`.
+- Ancho máximo de `400px`.
+- Bordes redondeados (`border-radius: 10px`).
+- Sombra ligera (`box-shadow`).
+- Se centra horizontalmente (`margin: 0 auto`).
+- Organiza su contenido en columna (`display: flex; flex-direction: column;`).
+
+### **Título del login**
+```css
+#login-box h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+```
+- Centra el texto del título `<h2>`.
+- Agrega un pequeño espacio inferior.
+
+---
+
+## 5. Estilos de `#profile` (Perfil de usuario)
+```css
+#profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+}
+```
+- Usa `display: flex` para organizar los elementos en fila.
+- Centra los elementos verticalmente con `align-items: center`.
+- Distribuye los elementos uniformemente con `justify-content: space-around`.
+- `width: 80%` asegura que no ocupe todo el ancho disponible.
+
+### **Imagen del perfil**
+```css
+#profile img {
+    width: 100px;
+    display: block;
+    border-radius: 50px;
+}
+```
+- Tamaño de `100px`.
+- Se muestra como un bloque.
+- Bordes redondeados (`border-radius: 50px`) para una imagen circular.
+
+### **Texto dentro del perfil**
+```css
+#profile div {
+    text-align: center;
+}
+```
+- Centra el texto.
+
+```css
+#profile div span {
+    display: block;
+}
+```
+- Convierte cada `span` en un bloque independiente.
+
+```css
+#profile div span:first-child {
+    font-size: 1.8em;
+    font-weight: 900;
+}
+```
+- Hace que el primer `span` tenga un tamaño mayor (`1.8em`).
+- Aplica un peso de fuente `900` para que sea más grueso.
+
+---
+
+## 6. Estilos de `#gallery` (Galería de imágenes)
+```css
+#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+```
+- Usa `display: flex` para organizar las imágenes.
+- `flex-wrap: wrap` permite que las imágenes se ajusten a nuevas líneas si es necesario.
+- Centra el contenido con `justify-content: center`.
+- Agrega un espaciado interno de `20px`.
+
+### **Imágenes dentro de la galería**
+```css
+#gallery img {
+    width: 300px;
+    margin: 20px;
+    padding: 5px;
+    border: 1px solid #fff;
+}
+```
+- Cada imagen tiene un ancho de `300px`.
+- `margin: 20px` agrega espacio entre las imágenes.
+- `padding: 5px` agrega un pequeño espacio interno.
+- `border: 1px solid #fff;` da un borde blanco a las imágenes.
+
+### **Efecto `hover` en las imágenes**
+```css
+#gallery img:hover {
+    border-color: #fb8500;
+    opacity: 0.7;
+}
+```
+- Cambia el borde a color naranja (`#fb8500`) cuando se pasa el mouse.
+- Reduce la opacidad al `70%` para dar un efecto visual.
 
 
