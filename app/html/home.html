@@ -33,7 +33,7 @@
       <section id="profile">
         <div>
           <img src="../assets/batman_avatar.webp" />
-          <span id="userName">Juan Pérez</span>
+          <span id="username">Juan Pérez</span>
         </div>
         <div>
           <span>10</span>
@@ -67,5 +67,22 @@
       <i class="fa-brands fa-x-twitter"></i>
       <i class="fa-brands fa-facebook"></i>
     </footer>
+    <script>
+      // Función para obtener el valor de un parámetro en la query string
+      function getQueryParam(param) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+      }
+
+      // Recupera el userName de la URL
+      const username = getQueryParam('username');
+
+      // Si el userName está disponible, lo muestra en la página
+      if (username) {
+          document.getElementById('username').textContent = `${username}!`;
+      } else {
+          document.getElementById('username').textContent = 'Bienvenido!';
+      }
+  </script>
   </body>
 </html>
