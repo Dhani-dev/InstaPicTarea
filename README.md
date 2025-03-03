@@ -20,6 +20,28 @@ let funcion = function() { console.log("Soy una función"); };  // Function
 let fecha = new Date();  // Date
 ```
 
+### 🔹 Uso de `Symbol`
+`Symbol` se usa para crear identificadores únicos. Es útil para definir propiedades de objetos sin riesgo de colisión con otras claves.
+
+```javascript
+const ID = Symbol("id");
+const usuario = {
+    nombre: "Carlos",
+    edad: 30,
+    [ID]: 12345  // Clave única con Symbol
+};
+
+console.log(usuario[ID]); // 12345
+console.log(Object.keys(usuario)); // ["nombre", "edad"] (Symbol no aparece aquí)
+console.log(Object.getOwnPropertySymbols(usuario)); // [ Symbol(id) ]
+```
+
+#### 📌 Casos de Uso de `Symbol`
+1. **Evitar colisiones de nombres en objetos**: Cuando trabajamos con librerías o frameworks, `Symbol` ayuda a evitar sobrescribir propiedades.
+2. **Definir claves privadas en objetos**: Aunque no son completamente privadas, las propiedades con `Symbol` no aparecen en `Object.keys()`.
+3. **Metaprogramación y API avanzada**: Algunos métodos nativos de JavaScript usan `Symbol`, como `Symbol.iterator` para iteradores personalizados.
+
+
 ## 📌 Estructuras de Control
 
 ### 🔹 Condicionales
