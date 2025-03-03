@@ -152,3 +152,28 @@ const persona2 = {
     }
 };
 persona2.saludar();
+```
+
+## 📌 Uso de `return` y `break` en Funciones
+
+### 🔹 `return`
+El uso de `return` en una función permite devolver un valor y finalizar su ejecución.
+```javascript
+function cuadrado(numero) {
+    return numero * numero;
+}
+console.log(cuadrado(4));  // 16
+```
+Si `return` no se especifica, la función devuelve `undefined` por defecto.
+
+### 🔹 `break`
+`break` se usa para detener la ejecución de un bucle o `switch`, pero también puede usarse dentro de `forEach` cuando se usa con `try...catch`.
+```javascript
+for (let i = 0; i < 10; i++) {
+    if (i === 5) {
+        break;  // Detiene el ciclo cuando i es 5
+    }
+    console.log(i);
+}
+```
+Ten en cuenta que `break` no se puede usar directamente dentro de funciones para salir de ellas; en su lugar, usa `return`.
