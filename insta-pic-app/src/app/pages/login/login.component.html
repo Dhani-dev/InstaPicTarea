@@ -1,4 +1,3 @@
-<header><h1>InstaPic</h1></header>
 <main>
     <section id="login-box">
         <h2>Inicio de sesión</h2>
@@ -6,13 +5,7 @@
         <input type="text" id="username"/>
         <label>Contraseña</label>
         <input type="password" id="password" placeholder="Ingrese contraseña"/>
-        <a href="home.html" class="primary">Iniciar sesión</a>
-        <a href="sign-up.html" class="secondary">Registrarse</a>
+        <a [routerLink]="['home']" class="primary">Iniciar sesión</a>
+        <a [routerLink]="['sign-up']" class="secondary">Registrarse</a>
     </section>
 </main>
-<footer>
-    <i class="fa-brands fa-instagram"></i>
-    <i class="fa-brands fa-whatsapp"></i>
-    <i class="fa-brands fa-x-twitter"></i>
-    <i class="fa-brands fa-facebook"></i>
-</footer>
