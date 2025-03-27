@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
+import { User } from '../../shared/interfaces/user.interface';
 
 @Component({
   selector: 'app-sign-up',
@@ -13,6 +15,8 @@ export class SignUpComponent {
   router = inject(Router);
 
   fb = inject(FormBuilder);
+
+  authService = inject(AuthService);
 
   passwordsMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password')?.value;
@@ -37,9 +41,11 @@ export class SignUpComponent {
       return;
     }
 
-    const {rePassword:_, ...user} = this.signUpForm.value;
+    const user = this.signUpForm.getRawValue() as Required<User>;
 
     localStorage.setItem(user.username!, JSON.stringify(user));
+
+    this.authService.registry(user);
 
     this.router.navigateByUrl('home');
 
