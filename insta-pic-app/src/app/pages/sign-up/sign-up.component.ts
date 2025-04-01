@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 import { User } from '../../shared/interfaces/user.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-sign-up',
@@ -37,21 +38,22 @@ export class SignUpComponent {
   onRegistry(){
 
     if(this.signUpForm.invalid){
-      alert('Diligencie todos los campos');
+      Swal.fire({
+        text:'Debe diligenciar todos los campos',
+        icon:'error'
+      })
       return;
     }
 
     const user = this.signUpForm.getRawValue() as Required<User>;
 
-    localStorage.setItem(user.username!, JSON.stringify(user));
+    const success = this.authService.registry(user);
 
-    this.authService.registry(user);
-
-    this.router.navigateByUrl('home');
+    if(success){
+      this.signUpForm.reset();
+      this.router.navigateByUrl('home');
+    }
 
   }
-
-
-
 
 }

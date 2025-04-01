@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,9 +12,12 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class LoginComponent {
 
-  router = inject(Router)
+  router = inject(Router);
+
+  authService = inject(AuthService);
 
   fb = inject(FormBuilder);
+
   loginForm = this.fb.group({
     username:['', [Validators.required, Validators.minLength(6)]],
     password:['', [Validators.required]]
@@ -22,27 +27,20 @@ export class LoginComponent {
 
   onLogin(){
     if(this.loginForm.invalid){
-      alert('Diligencie todos los campos');
+      Swal.fire({
+        text:'Diligencie todos los campos',
+        icon:'error'
+      })
       return;
     }
 
     const {username, password } = this.loginForm.value;
 
-    const userSrt = localStorage.getItem(username!);
+    const success = this.authService.login(username!, password!);
 
-    if (!userSrt){
-      alert('Ingreso no valido');
-      return;
+    if (success){
+      this.router.navigateByUrl('home');
     }
-
-    const user = JSON.parse(userSrt);
-
-    if(password!==user.password){
-
-      alert('Ingreso no valido');
-      return;
-    }
-    this.router.navigateByUrl('home');
 
   }
 
