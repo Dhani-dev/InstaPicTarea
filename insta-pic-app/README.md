@@ -159,15 +159,3 @@ export class UserComponent {
 // - Se desuscribe automáticamente al destruir el componente
 ```
 
----
-
-## ✅ Resumen
-
-```txt
-Los Observables son esenciales para trabajar con operaciones asíncronas en Angular. Te permiten:
-
-✅ Reaccionar a flujos de datos con múltiples valores  
-✅ Encadenar transformaciones como map, filter, switchMap  
-✅ Manejar errores de forma elegante  
-✅ Mantener el código limpio, reactivo y moderno
-```
