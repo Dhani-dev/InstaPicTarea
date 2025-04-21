@@ -36,11 +36,37 @@ export class LoginComponent {
 
     const {username, password } = this.loginForm.value;
 
-    const success = this.authService.login(username!, password!);
+    this.authService.login(username!, password!).subscribe({
+      next:(response)=>{
+        if (response.success){
+          this.router.navigateByUrl('home');
+        }
+      },
+      error:(error)=>{
+        Swal.fire({
+          text:'Credenciales incorrectas',
+          icon:'error'
+        })
+      }
+    });
 
-    if (success){
+
+
+
+    /* if (success){
       this.router.navigateByUrl('home');
     }
+
+
+    const success2 = await this.authService.login2(username!, password!);
+    if (success) {
+      this.router.navigateByUrl('home');
+    } else {
+      Swal.fire({
+        text:'Credenciales incorrectas',
+        icon:'error'
+      })
+    }*/
 
   }
 
