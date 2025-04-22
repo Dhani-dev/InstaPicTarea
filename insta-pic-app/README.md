@@ -10,6 +10,71 @@ Un **Observable** es como una **fuente de datos que emite valores en el tiempo**
 
 ---
 
+---
+
+## ⚙️ Enfoque Normal (Imperativo)
+
+- Usa `async/await` o `toPromise()` para esperar una respuesta.
+- Sencillo de implementar en lógica secuencial.
+
+```ts
+async login(username: string, password: string): Promise<boolean> {
+  try {
+    const response = await this.http
+      .post('/login', { username, password })
+      .toPromise();
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+```
+
+---
+
+## ⚡ Enfoque Reactivo (Observable)
+
+- Usa operadores de **RxJS** como `map`, `switchMap`, `tap`, etc.
+- Ideal para flujos complejos, eventos múltiples y cancelables.
+
+```ts
+login(username: string, password: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>('/login', { username, password }).pipe(
+    tap({
+      next: (response) => console.log(response),
+      error: (error) => console.error('Error', error)
+    })
+  );
+}
+```
+
+---
+
+## ✅ Ventajas
+
+| Enfoque        | Ventajas                                      |
+|----------------|-----------------------------------------------|
+| **Imperativo** | Simple, familiar, ideal para flujos únicos    |
+| **Reactivo**   | Escalable, cancelable, se adapta a flujos complejos |
+
+---
+
+## ❌ Desventajas
+
+| Enfoque        | Desventajas                                     |
+|----------------|--------------------------------------------------|
+| **Imperativo** | No cancelable, limitado para flujos múltiples    |
+| **Reactivo**   | Mayor curva de aprendizaje, más complejo de leer |
+
+---
+
+## 📌 ¿Cuándo usar cada uno?
+
+- **Imperativo:** Operaciones simples y secuenciales, prototipos.
+- **Reactivo:** Validaciones de formularios, múltiples llamadas HTTP, apps en tiempo real.
+
+---
+
 ## 🧠 ¿Para qué se usan en Angular?
 
 Los Observables se usan frecuentemente en Angular para:
