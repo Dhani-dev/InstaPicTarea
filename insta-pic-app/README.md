@@ -10,8 +10,6 @@ Un **Observable** es como una **fuente de datos que emite valores en el tiempo**
 
 ---
 
----
-
 ## ⚙️ Enfoque Normal (Imperativo)
 
 - Usa `async/await` o `toPromise()` para esperar una respuesta.
