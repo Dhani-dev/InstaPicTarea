@@ -24,7 +24,6 @@ export class LoginComponent {
   })
 
 
-
   onLogin(){
     if(this.loginForm.invalid){
       Swal.fire({
@@ -34,11 +33,11 @@ export class LoginComponent {
       return;
     }
 
-    const {username, password } = this.loginForm.value;
+    const {username, password } = this.loginForm.value as {username:string, password:string };
 
-    this.authService.login(username!, password!).subscribe({
+    this.authService.login(username, password).subscribe({
       next:(response)=>{
-        if (response.success){
+        if (!!response){
           this.router.navigateByUrl('home');
         }
       },
@@ -49,24 +48,6 @@ export class LoginComponent {
         })
       }
     });
-
-
-
-
-    /* if (success){
-      this.router.navigateByUrl('home');
-    }
-
-
-    const success2 = await this.authService.login2(username!, password!);
-    if (success) {
-      this.router.navigateByUrl('home');
-    } else {
-      Swal.fire({
-        text:'Credenciales incorrectas',
-        icon:'error'
-      })
-    }*/
 
   }
 
