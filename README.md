@@ -199,3 +199,88 @@ ngOnInit() {
 }
 
 ```
+
+
+## Generar el token en el backend
+
+El token es generado desde el backend.
+
+- Instalar la libreria de JWT
+
+```js
+
+npm install @nestjs/jwt
+
+```
+
+- Agregar al módulo de autenticación, el módulo de JWT
+
+```ts
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtModule } from '@nestjs/jwt';
+
+@Module({
+  controllers: [AuthController],
+  providers: [AuthService],
+  imports:[
+    JwtModule.register({
+      global:true, //habilitamos el uso global
+      secret: 'AABBCC', //Definimos una clave que 'firme' el jwt
+      signOptions: { expiresIn: '1h' } //Definimos un tiempo de expiración del token
+    })
+  ]
+})
+export class AuthModule {}
+```
+
+- Inyectar al servicio de autenticación, el servicio jwt-service
+
+```ts
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class AuthService {
+
+    constructor(private jwtService: JwtService){}
+
+    private getToken(user:SignUpDto):string{
+        return this.jwtService.sign({
+          username:user.username,
+          email:user.email
+        });
+    }
+
+}
+```
+
+- En las respuestas de los métodos de login y sign-up, hacer un llamado al método **getToken**, para generarlo
+
+```ts
+
+    login(loginDto: LoginDto) {
+        const user = this.users.find(user=>user.username===loginDto.username && user.password===loginDto.password);
+        if(!user){
+            throw new NotFoundException('Invalid credentials');
+        }
+        return {
+            success:true,
+            token:this.getToken(user)
+        }
+    }
+
+
+    signUp(signUpDto: SignUpDto):LoginResponse {
+        const user = this.users.find(user=>user.username===signUpDto.username);
+        if(user){
+            throw new BadRequestException('User already exists');
+        }
+        this.users.push(signUpDto);
+        return {
+            success:true,
+            token:this.getToken(signUpDto)
+        }
+    }
+
+```

@@ -44,5 +44,5 @@ export class AuthService {
           username:user.username,
           email:user.email
         });
-      }
+    }
 }
