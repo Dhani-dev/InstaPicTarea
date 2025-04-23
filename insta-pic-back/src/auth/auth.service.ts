@@ -2,9 +2,12 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { SignUpDto } from './dto/sign-up-request.dto';
 import { LoginDto } from './dto/login-request.dto';
 import { LoginResponse } from './dto/login-response.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+
+    constructor(private jwtService: JwtService){}
 
 
     users:SignUpDto[] = [
@@ -19,7 +22,7 @@ export class AuthService {
         }
         return {
             success:true,
-            token:'123456'
+            token:this.getToken(user)
         }
     }
 
@@ -32,7 +35,14 @@ export class AuthService {
         this.users.push(signUpDto);
         return {
             success:true,
-            token:'123456'
+            token:this.getToken(signUpDto)
         }
     }
+
+    private getToken(user:SignUpDto):string{
+        return this.jwtService.sign({
+          username:user.username,
+          email:user.email
+        });
+      }
 }

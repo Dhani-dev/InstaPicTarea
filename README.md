@@ -2,200 +2,200 @@
 
 # Introducción a JavaScript
 
-## 📌 Tipos de Datos en JavaScript
+# JSON Web Tokens (JWT) en Angular
 
-```javascript
-// Primitivos
-let cadena = "Hola, mundo";  // String
-let numero = 42;  // Number
-let booleano = true;  // Boolean
-let indefinido;  // Undefined
-let nulo = null;  // Null
-let simbolo = Symbol("mi-simbolo");  // Symbol
+## Quées un JWT?
 
-// Complejos
-let objeto = { nombre: "Juan", edad: 30 };  // Object
-let arreglo = [1, 2, 3, 4, 5];  // Array
-let funcion = function() { console.log("Soy una función"); };  // Function
-let fecha = new Date();  // Date
+JWT (JSON Web Token) es un **formato estándar** para transmitir información de manera segura entre dos partes como un objeto JSON. Es muy utilizado para autenticación.
+
+---
+
+## Estructura de un JWT
+
+Un JWT consta de tres partes codificadas en base64 separadas por puntos (`.`):
+
+1. **Header**: tipo de token y algoritmo de cifrado.
+2. **Payload**: datos del usuario y claims personalizados.
+3. **Signature**: verificación de integridad.
+
+```
+xxxxx.yyyyy.zzzzz
 ```
 
-### 🔹 Uso de `Symbol`
-`Symbol` se usa para crear identificadores únicos. Es útil para definir propiedades de objetos sin riesgo de colisión con otras claves.
+---
 
-```javascript
-const ID = Symbol("id");
-const usuario = {
-    nombre: "Carlos",
-    edad: 30,
-    [ID]: 12345  // Clave única con Symbol
-};
+## Cómo funciona JWT en autenticación?
 
-console.log(usuario[ID]); // 12345
-console.log(Object.keys(usuario)); // ["nombre", "edad"] (Symbol no aparece aquí)
-console.log(Object.getOwnPropertySymbols(usuario)); // [ Symbol(id) ]
-```
+1. El usuario envía credenciales (usuario/contraseña).
+2. El backend genera un JWT y lo devuelve.
+3. El frontend lo almacena (normalmente en localStorage).
+4. Cada petición posterior envía el token en el header `Authorization`.
 
-#### 📌 Casos de Uso de `Symbol`
-1. **Evitar colisiones de nombres en objetos**: Cuando trabajamos con librerías o frameworks, `Symbol` ayuda a evitar sobrescribir propiedades.
-2. **Definir claves privadas en objetos**: Aunque no son completamente privadas, las propiedades con `Symbol` no aparecen en `Object.keys()`.
-3. **Metaprogramación y API avanzada**: Algunos métodos nativos de JavaScript usan `Symbol`, como `Symbol.iterator` para iteradores personalizados.
+---
 
+## Ejemplo en Angular
 
-## 📌 Estructuras de Control
+### Servicio de autenticación
 
-### 🔹 Condicionales
+```ts
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
 
-```javascript
-let edad = 18;
+  private apiUrl = 'http://localhost:3000/api/v1';
 
-if (edad >= 18) {
-    console.log("Eres mayor de edad");
-} else {
-    console.log("Eres menor de edad");
-}
+  constructor(private http: HttpClient) {}
 
-// Operador ternario
-let mensaje = (edad >= 18) ? "Adulto" : "Menor";
-console.log(mensaje);
+  login(username: string, password: string): Observable<any> {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, {
+      username,
+      password,
+    }).pipe(
+      tap(response => {
+        sessionStorage.setItem('token', response.token);
+      })
+    );
+  }
 
-// Switch
-let dia = "lunes";
+  getToken(): string | null {
+    return sessionStorage.getItem('token');
+  }
 
-switch (dia) {
-    case "lunes":
-        console.log("Inicio de semana");
-        break;
-    case "viernes":
-        console.log("¡Viernes, por fin!");
-        break;
-    default:
-        console.log("Día común");
+  logout(): void {
+    sessionStorage.removeItem('token');
+  }
 }
 ```
 
-### 🔹 Ciclos
+---
 
-```javascript
-// For
-for (let i = 0; i < 5; i++) {
-    console.log("Iteración:", i);
-}
+### Interceptor para agregar JWT
 
-// While
-let contador = 0;
-while (contador < 3) {
-    console.log("While:", contador);
-    contador++;
-}
+```ts
+@Injectable()
+export class JwtInterceptor implements HttpInterceptor {
+  constructor(private authService: AuthService) {}
 
-// Do-While
-let num = 0;
-do {
-    console.log("Do-While:", num);
-    num++;
-} while (num < 3);
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.authService.getToken();
 
-// ForEach (en arrays)
-let numeros = [10, 20, 30];
-numeros.forEach(num => console.log("Número:", num));
-
-// For...of (para recorrer arrays)
-for (let valor of numeros) {
-    console.log("For of:", valor);
-}
-
-// For...in (para recorrer objetos)
-let persona = { nombre: "Ana", edad: 25 };
-for (let clave in persona) {
-    console.log(clave, ":", persona[clave]);
-}
-```
-
-## 📌 Llamado a Funciones
-
-```javascript
-function saludar(nombre) {
-    return "Hola, " + nombre;
-}
-
-console.log(saludar("Carlos"));  // Llamado normal
-
-// Llamado con parámetros opcionales
-function sumar(a, b = 5) {
-    return a + b;
-}
-console.log(sumar(10));  // 10 + 5 = 15
-
-// Pasando una función como parámetro (callback)
-function operar(a, b, callback) {
-    return callback(a, b);
-}
-console.log(operar(5, 3, (x, y) => x * y));  // Multiplicación
-```
-
-## 📌 Formas de Escribir una Función
-
-### 🔹 Declaración de Función
-```javascript
-function suma(a, b) {
-    return a + b;
-}
-console.log(suma(3, 4));
-```
-
-### 🔹 Expresión de Función (Función Anónima)
-```javascript
-const resta = function(a, b) {
-    return a - b;
-};
-console.log(resta(7, 2));
-```
-
-### 🔹 Función Flecha (Arrow Function)
-```javascript
-const multiplicar = (a, b) => a * b;
-console.log(multiplicar(4, 5));
-```
-
-### 🔹 Función Autoinvocada (IIFE - Immediately Invoked Function Expression)
-```javascript
-(function() {
-    console.log("Soy una función autoinvocada");
-})();
-```
-
-### 🔹 Función como Método de un Objeto
-```javascript
-const persona2 = {
-    nombre: "Pedro",
-    saludar() {
-        console.log("Hola, soy " + this.nombre);
+    if (token) {
+      const cloned = req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`),
+      });
+      return next.handle(cloned);
     }
-};
-persona2.saludar();
-```
 
-## 📌 Uso de `return` y `break` en Funciones
-
-### 🔹 `return`
-El uso de `return` en una función permite devolver un valor y finalizar su ejecución.
-```javascript
-function cuadrado(numero) {
-    return numero * numero;
+    return next.handle(req);
+  }
 }
-console.log(cuadrado(4));  // 16
 ```
-Si `return` no se especifica, la función devuelve `undefined` por defecto.
 
-### 🔹 `break`
-`break` se usa para detener la ejecución de un bucle o `switch`, pero también puede usarse dentro de `forEach` cuando se usa con `try...catch`.
-```javascript
-for (let i = 0; i < 10; i++) {
-    if (i === 5) {
-        break;  // Detiene el ciclo cuando i es 5
+---
+
+## Ventajas
+
+- Stateless: no requiere mantener sesión en servidor.
+- Escalable.
+- Puede llevar información útil (como roles) en el payload.
+
+## Riesgos
+
+- Si el token es robado, el atacante puede suplantar al usuario.
+- Evitar guardarlos en `localStorage` si hay riesgo de XSS (Cross-Site Scripting).
+
+---
+
+## Recomendaciones
+
+- Usar HTTPS siempre.
+- Cortos periodos de expiración + Refresh Tokens.
+- Validar y firmar tokens correctamente en el backend.
+
+---
+
+## Desencriptando con JWT
+
+El JWT permite tener información del usuario (nombre de usuario, roles, expiración, etc). Para manipular esta información existen librerías tales como **jwt-decode**.
+
+- Instalar jwt-decode
+
+```js
+
+npm install jwt-decode
+
+```
+
+
+- Crear un servicio para manejar el token
+
+```ts
+import { Injectable } from '@angular/core';
+import jwtDecode from 'jwt-decode';
+
+export interface JwtPayload {
+  email: string;
+  username: string;
+  exp: number;
+  iat?: number;
+}
+
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TokenService {
+  private tokenKey = 'token';
+
+  getToken(): string | null {
+    return sessionStorage.getItem(this.tokenKey);
+  }
+
+  decodeToken(): JwtPayload | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return jwtDecode<JwtPayload>(token);
+    } catch (error) {
+      console.error('Token inválido:', error);
+      return null;
     }
-    console.log(i);
+  }
+
+  isTokenExpired(): boolean {
+    const payload = this.decodeToken();
+    if (!payload?.exp) return true;
+
+    const now = Math.floor(Date.now() / 1000); // tiempo en segundos
+    return payload.exp < now;
+  }
+
+  clearToken(): void {
+    sessionStorage.removeItem(this.tokenKey);
+  }
 }
+
 ```
-Ten en cuenta que `break` no se puede usar directamente dentro de funciones para salir de ellas; en su lugar, usa `return`.
+
+- Usar el servicio en un componente o en un guard
+
+```ts
+constructor(private tokenService: TokenService) {}
+
+ngOnInit() {
+  const tokenData = this.tokenService.decodeToken();
+
+  if (tokenData) {
+    console.log('Usuario:', tokenData.username);
+    console.log('Email:', tokenData.email);
+    console.log('Expira en:', new Date(tokenData.exp * 1000));
+  }
+
+  if (this.tokenService.isTokenExpired()) {
+    console.warn('Token expirado');
+  }
+}
+
+```
