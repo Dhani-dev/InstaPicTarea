@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { TOKEN } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-  private tokenKey = 'token';
 
   getToken(): string | null {
-    return sessionStorage.getItem(this.tokenKey);
+    return sessionStorage.getItem(TOKEN);
   }
 
   decodeToken(): JwtPayload | null {
@@ -33,7 +33,7 @@ export class TokenService {
   }
 
   clearToken(): void {
-    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(TOKEN);
   }
 
 }

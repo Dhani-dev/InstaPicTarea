@@ -3,6 +3,7 @@ import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { LoginResponse } from '../interfaces/login-response.interface';
 import { catchError, map, Observable, tap } from 'rxjs';
+import { TOKEN } from '../utils/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.urlBase}/auth/sign-up`, user).pipe(
       tap({
         next: (response) => {
-          sessionStorage.setItem('token', response.token);
+          sessionStorage.setItem(TOKEN, response.token);
           this.isLogged.update(() => true);
         },
       }),

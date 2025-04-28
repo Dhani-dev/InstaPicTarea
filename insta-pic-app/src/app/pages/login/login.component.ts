@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../shared/services/auth.service';
+import { URL_REDIRECT } from '../../shared/utils/constants';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,8 @@ export class LoginComponent {
     this.authService.login(username, password).subscribe({
       next:(response)=>{
         if (!!response){
-          this.router.navigateByUrl('home');
+          let url = localStorage.getItem(URL_REDIRECT)||'home';
+          this.router.navigateByUrl(url);
         }
       },
       error:(error)=>{
