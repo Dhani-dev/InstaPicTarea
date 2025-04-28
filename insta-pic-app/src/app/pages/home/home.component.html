@@ -1,7 +1,7 @@
 <section id="profile">
   <div>
     <img src="../assets/batman_avatar.webp" />
-    <span id="username">{{username}}</span>
+    <span id="username">{{ username }}</span>
   </div>
   <div>
     <span>10</span>
@@ -17,14 +17,15 @@
   </div>
 </section>
 <section id="gallery">
-  <img src="../assets/gallery0.jpg" />
-  <img src="../assets/gallery1.jpg" />
-  <img src="../assets/gallery2.webp" />
-  <img src="../assets/gallery3.jpeg" />
-  <img src="../assets/gallery4.jpg" />
-  <img src="../assets/gallery5.jpg" />
-  <img src="../assets/gallery6.jpg" />
-  <img src="../assets/gallery7.jpg" />
-  <img src="../assets/gallery8.webp" />
-  <img src="../assets/gallery9.avif" />
+  @for (item of gallery(); track item) {
+    <app-image
+      [image]="item"
+      (delete)="onDeleteImage($event)"
+      (comments)="onComments($event)"
+      (addComment)="onAddComment($event, item.id)"
+    />
+  } @empty {
+    <span>Aún no tienes imágenes</span>
+  }
+
 </section>

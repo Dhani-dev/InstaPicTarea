@@ -152,15 +152,3 @@ footer i{
   justify-content: center;
   padding: 20px;
 }
-
-#gallery img{
-  width: 300px;
-  margin: 20px;
-  padding: 5px;
-  border: 1px solid #fff;
-}
-
-#gallery img:hover{
-  border-color:#fb8500;
-  opacity: 0.7;
-}
