@@ -1,98 +1,377 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS con TypeORM y PostgreSQL: ejemplo Users y Photos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📘 ¿Qué es TypeORM?
 
-## Description
+**TypeORM** es un Object-Relational Mapper (ORM) para Node.js escrito en TypeScript. Permite interactuar con bases de datos relacionales mediante clases y objetos, sin escribir SQL directamente.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### ✅ Ventajas
+- **Integración nativa con TypeScript**: soporte completo de tipos.
+- **Abstracción del acceso a datos**: operaciones complejas con poco código.
+- **Migraciones integradas**: control de cambios en la base de datos.
+- **Soporte para relaciones**: `OneToMany`, `ManyToOne`, `ManyToMany`, etc.
+- **Multibase de datos**: PostgreSQL, MySQL, SQLite, etc.
+- **Estilos Active Record y Data Mapper**.
 
-## Project setup
+### ❌ Desventajas
+- **Mantenimiento irregular**: algunas versiones pueden tener bugs.
+- **Curva de aprendizaje**: requiere conocer conceptos de ORM y TypeScript.
+- **Consultas complejas menos eficientes**: a veces es mejor usar SQL puro.
+- **Migraciones limitadas**: menos flexible que herramientas especializadas.
 
-```bash
-$ npm install
-```
+### 🛠️ Buenas prácticas
+- Usa **DTOs** para separar validación de entrada de las entidades.
+- Define relaciones usando `@OneToMany`, `@ManyToOne`, etc. con cuidado.
+- **Evita `synchronize: true` en producción**: mejor usar migraciones.
+- Valida entrada con `class-validator` y `class-transformer`.
+- Mantén separación clara entre servicios, controladores y repositorios.
+- Versiona tu base de datos con migraciones revisadas.
+- Usa carga explícita de relaciones en lugar de `eager: true` por defecto.
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+Este ejemplo indica el paso a paso para implementar un CRUD con las entidades `Users` y `Photos` usando TypeORM y PostgreSQL.
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+## 🧾 Paso 1: Instalar dependencias
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install @nestjs/typeorm typeorm pg
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 📦 Paso 2: Crear los módulos
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+nest g module users
+nest g service users
+nest g controller users
+
+nest g module photos
+nest g service photos
+nest g controller photos
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🏗️ Paso 3: Configurar la conexión en `app.module.ts`
 
-Check out a few resources that may come in handy when working with NestJS:
+```ts
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { PhotosModule } from './photos/photos.module';
+import { User } from './users/user.entity';
+import { Photo } from './photos/photo.entity';
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'tu_usuario',
+      password: 'tu_contraseña',
+      database: 'mi_base_de_datos',
+      entities: [User, Photo],
+      synchronize: true, // solo en desarrollo
+    }),
+    UsersModule,
+    PhotosModule,
+  ],
+})
+export class AppModule {}
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🗃️ Paso 4: Crear las entidades
 
-## Stay in touch
+### `user.entity.ts`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```ts
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  OneToMany,
+  Unique,
+} from 'typeorm';
+import { Photo } from '../photos/photo.entity';
 
-## License
+@Entity('users')
+@Unique(['email'])
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+  @Column()
+  name: string;
+
+  @Column()
+  email: string;
+
+  @CreateDateColumn({ name: 'creation_date' })
+  creationDate: Date;
+
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos: Photo[];
+}
+```
+
+### `photo.entity.ts`
+
+```ts
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { User } from '../users/user.entity';
+
+@Entity('photos')
+export class Photo {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  url: string;
+
+  @CreateDateColumn({ name: 'creation_date' })
+  creationDate: Date;
+
+  @ManyToOne(() => User, (user) => user.photos, { onDelete: 'CASCADE' })
+  user: User;
+}
+```
+
+---
+
+## 🛠️ Paso 5: Registrar entidades en sus módulos
+
+### `users.module.ts`
+
+```ts
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { User } from './user.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UsersController],
+  providers: [UsersService],
+})
+export class UsersModule {}
+```
+
+### `photos.module.ts`
+
+```ts
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { PhotosService } from './photos.service';
+import { PhotosController } from './photos.controller';
+import { Photo } from './photo.entity';
+import { User } from '../users/user.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Photo, User])],
+  controllers: [PhotosController],
+  providers: [PhotosService],
+})
+export class PhotosModule {}
+```
+
+---
+
+## 🧠 Paso 6: Implementar servicios y controladores
+
+Sigue una lógica similar a la del CRUD anterior, adaptando nombres a `User` y `Photo`.
+
+
+## 🔧 CRUD de Users
+
+### `users.service.ts`
+
+```ts
+@Injectable()
+export class UsersService {
+  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+
+  create(data: CreateUserDto) {
+    const user = this.repo.create(data);
+    return this.repo.save(user);
+  }
+
+  findAll() {
+    return this.repo.find({ relations: ['photos'] });
+  }
+
+  findOne(id: string) {
+    return this.repo.findOne({ where: { id }, relations: ['photos'] });
+  }
+
+  async update(id: string, data: UpdateUserDto) {
+    await this.repo.update(id, data);
+    return this.findOne(id);
+  }
+
+  async remove(id: string) {
+    const user = await this.findOne(id);
+    return this.repo.remove(user);
+  }
+}
+```
+
+### `users.controller.ts`
+
+```ts
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.usersService.update(id, dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
+  }
+}
+```
+
+---
+
+## 🖼️ CRUD de Photos
+
+### `photos.service.ts`
+
+```ts
+@Injectable()
+export class PhotosService {
+  constructor(
+    @InjectRepository(Photo) private photoRepo: Repository<Photo>,
+    @InjectRepository(User) private userRepo: Repository<User>,
+  ) {}
+
+  async create(data: CreatePhotoDto) {
+    const user = await this.userRepo.findOneBy({ id: data.userId });
+    const photo = this.photoRepo.create({ url: data.url, user });
+    return this.photoRepo.save(photo);
+  }
+
+  findAll() {
+    return this.photoRepo.find({ relations: ['user'] });
+  }
+
+  findOne(id: string) {
+    return this.photoRepo.findOne({ where: { id }, relations: ['user'] });
+  }
+
+  async update(id: string, data: UpdatePhotoDto) {
+    await this.photoRepo.update(id, { url: data.url });
+    return this.findOne(id);
+  }
+
+  async remove(id: string) {
+    const photo = await this.findOne(id);
+    return this.photoRepo.remove(photo);
+  }
+}
+```
+
+### `photos.controller.ts`
+
+```ts
+@Controller('photos')
+export class PhotosController {
+  constructor(private readonly photosService: PhotosService) {}
+
+  @Post()
+  create(@Body() dto: CreatePhotoDto) {
+    return this.photosService.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.photosService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.photosService.findOne(id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dto: UpdatePhotoDto) {
+    return this.photosService.update(id, dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.photosService.remove(id);
+  }
+}
+```
+
+---
+
+## ✍️ DTOs de ejemplo
+
+### `create-user.dto.ts`
+
+```ts
+export class CreateUserDto {
+  name: string;
+  email: string;
+}
+```
+
+### `update-user.dto.ts`
+
+```ts
+export class UpdateUserDto {
+  name?: string;
+  email?: string;
+}
+```
+
+### `create-photo.dto.ts`
+
+```ts
+export class CreatePhotoDto {
+  userId: string;
+  url: string;
+}
+```
+
+### `update-photo.dto.ts`
+
+```ts
+export class UpdatePhotoDto {
+  url: string;
+}
+```
