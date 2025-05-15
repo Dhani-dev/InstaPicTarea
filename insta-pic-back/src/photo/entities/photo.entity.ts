@@ -1,5 +1,5 @@
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, GeneratedCreationDate } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('photos')
 export class Photo{
@@ -10,12 +10,12 @@ export class Photo{
     @Column({type:'varchar'})
     url:string;
 
-    @GeneratedCreationDate()
+    @CreateDateColumn({name:'create_date'})
     creationDate:Date;
 
     @ManyToOne(
         () => User,
-        user => user.posts
+        user => user.photos
     )
     user: User;
 

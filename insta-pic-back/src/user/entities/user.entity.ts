@@ -27,6 +27,6 @@ export class User {
         photo => photo.user,
         { cascade:true }
     )
-    photo: Photo[];
+    photos: Photo[];
 
 }
