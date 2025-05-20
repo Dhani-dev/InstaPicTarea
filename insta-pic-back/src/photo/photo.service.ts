@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
-import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Photo } from './entities/photo.entity';
@@ -14,20 +13,31 @@ export class PhotoService {
   ) { }
 
   create(createPhotoDto: CreatePhotoDto) {
-    return `This action create a user`;
+    const photo = this.photoRepository.create({
+      url:createPhotoDto.url,
+      user:{
+        id:createPhotoDto.userId
+      }
+    })
+    return this.photoRepository.save(photo);
   }
 
   findAll() {
     return this.photoRepository.find();
   }
 
-  findOne(username:string) {
-    return `This action find a #${username} user`;
+  findAllByUser(userId:string) {
+    return this.photoRepository.find({
+      where:{user:{id:userId}},
+      select:{
+        id:true,
+        url:true,
+        user:{username:true}
+      },
+      relations:{user:true}
+    });
   }
 
-  update(id: number, updateUserDto: UpdatePhotoDto) {
-    return `This action updates a #${id} user`;
-  }
 
   remove(id: number) {
     return `This action removes a #${id} user`;

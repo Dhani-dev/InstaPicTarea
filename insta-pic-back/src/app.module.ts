@@ -12,11 +12,11 @@ import { Photo } from './photo/entities/photo.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'tu_usuario',
-      password: 'tu_contraseña',
-      database: 'mi_base_de_datos',
+      host: 'supabase.com',
+      port: 6543,
+      username: 'postgres',
+      password: 'pass',
+      database: 'postgres',
       entities: [User, Photo],
       synchronize: true, // solo en desarrollo
     }),

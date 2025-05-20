@@ -1,6 +1,7 @@
 export interface GalleryItem{
   id:string;
   url:string,
+  username?:string,
   comments:Comment[];
 }
 
