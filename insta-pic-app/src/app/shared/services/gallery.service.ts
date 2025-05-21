@@ -90,10 +90,10 @@ export class GalleryService {
           const url = `${this.URL_BASE_STORAGE}/${this.BUCKET_NAME}/${user.username}/${fileName}`;
           const body = {
             url,
-            id:user.userId
+            id:user.id
           }
           this.http.post(this.URL_BASE_SERVICE, body, this.getHeaders(this.tokenService.getToken()!)).subscribe(response=>{
-            this.http.get<any[]>(`${this.URL_BASE_SERVICE}/${user.userId}`).subscribe(response=>{
+            this.http.get<any[]>(`${this.URL_BASE_SERVICE}/${user.id}`).subscribe(response=>{
               const gallery = response.map(item=>{
                 return {
                   id:item.id,
