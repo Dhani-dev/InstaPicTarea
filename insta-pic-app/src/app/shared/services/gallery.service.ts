@@ -85,56 +85,6 @@ export class GalleryService {
 
   }
 
-  /*
-  upload(file: File, fileName: string) {
-    const user = this.tokenService.decodeToken();
-    if (!user || this.tokenService.isTokenExpired()) {
-      console.error('User not authenticated or token expired');
-      return;
-    }
-    if (user) {
-      this.supabase.storage
-        .from('instapic')
-        .upload(`${user.username}/${fileName}`, file)
-        .then(response => {
-          if (response.data) {
-            const url = `${this.URL_BASE_STORAGE}/${this.BUCKET_NAME}/${user.username}/${fileName}`;
-            const body = {
-              url,
-              userId: user.id
-            }
-
-            console.log('Making POST request with body:', body); // Add this
-
-            this.http.post(this.URL_BASE_SERVICE, body, this.getHeaders(this.tokenService.getToken()!))
-              .subscribe({
-                next: (response) => {
-                  console.log('POST successful:', response);
-                  this.http.get<any[]>(`${this.URL_BASE_SERVICE}/${user!.id}`, this.getHeaders(this.tokenService.getToken()!))
-                    .subscribe({
-                      next: (response) => {
-                        console.log('GET successful:', response);
-                        const gallery = response.map(item => {
-                          return {
-                            id: item.id,
-                            url: item.url,
-                            username: item.user.username,
-                            comments: []
-                          };
-                        });
-                        this._gallery.set(gallery);
-                      },
-                      error: (err) => console.error('GET error:', err)
-                    });
-                },
-                error: (err) => console.error('POST error:', err)
-              });
-          }
-        })
-        .catch(err => console.error('Upload error:', err));
-    }
-  }*/
-
     upload(file: File, fileName: string): void {
     const user = this.tokenService.decodeToken();
     if (!user || this.tokenService.isTokenExpired()) {
