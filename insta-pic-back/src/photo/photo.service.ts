@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -39,9 +39,15 @@ export class PhotoService {
   }
 
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  
+
+  async remove(id: string) {
+  const result = await this.photoRepository.delete(id);
+  if (result.affected === 0) {
+    throw new NotFoundException(`Photo with ID "${id}" not found.`);
   }
+  return 'Photo deleted successfully';
 }
 
 
+}

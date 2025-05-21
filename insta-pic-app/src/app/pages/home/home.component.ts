@@ -4,10 +4,11 @@ import { Comment, GalleryItem } from '../../shared/interfaces/gallery-item.inter
 import { GalleryService } from '../../shared/services/gallery.service';
 import { ImageComponent } from '../../shared/controls/image/image.component';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [ImageComponent],
+  imports: [ImageComponent, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
